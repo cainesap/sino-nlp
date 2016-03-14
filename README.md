@@ -1,11 +1,11 @@
 ## sino-nlp: NLP for Chinese
 ===
 
-#### Normalisation of Weibo posts
+#### Age profiling of Weibo users
 
 ###### Scripts
 * `evalAnalysis.R`: 
-* `normController.R`: 
+* `normTextExtractFeatures.R`: normalise texts and extract features for age profiling;
 * `segmentAndTagWeiboPosts.R`: 
 
 ###### Lists
