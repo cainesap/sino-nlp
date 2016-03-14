@@ -24,14 +24,14 @@ weibo <- read.xls(filein, as.is = TRUE)
 
 ## LOAD RESOURCES
 ## classical characters
-classical <- read.xls('list-classical-chinese-chrs.xlsx', as.is = TRUE)
+classical <- read.csv('dictClassicalModernCharacters.csv', as.is = TRUE)
 listclassical <- classical[,1]
 replaceclassical <- classical[,2]
 ## popular expressions
-popex <- read.xls("list-popular-expressions.xlsx", as.is = TRUE)
+popex <- read.csv("listPopularExpressions.csv", as.is = TRUE)
 listpopex <- popex[,1]
 ## kaomoji (Japanese emoticons/emojis)
-kaomoji <- read.csv("list-kaomoji.csv", header = FALSE, as.is = TRUE, sep = "$")
+kaomoji <- read.csv("listKaomoji.csv", header = FALSE, as.is = TRUE, sep = "$")
 listkaomoji <- kaomoji[1,]
 
 
@@ -263,19 +263,13 @@ for (r in 1:nrow(weibo)) {
 		print(paste(countpun, "repeated punctuation(s) found; new text:", post8))
 		
 		## add info about this post to output data frame, and save to file as you go
-		newline <- data.frame(r, n-2, age, ageCat, post1, post8, countpostlength, poetic, countpopex, countclassical, emoticon_laugh, emoticon_tear, emoticon_titter, emoticon_love, emoticon_heart, countemot, kaomoji1, kaomoji2, kaomoji3, kaomoji4, kaomoji5, countkao, countlet, counthash, countpun)
+		newline <- data.frame(r, n-2, age, ageCat, post1, post8, countpostlength, poetic, countpopex, countclassical, emoticon_laugh, emoticon_tear, emoticon_titter, emoticon_love, emoticon_heart, countemot, countkao, countlet, counthash, countpun)
+		headers <- c("user", "post", "age", "age_cat", "original", "cleaned", "post_length", "poetic_format", "popular_expressions", "classical_chrs", "emoticon_laugh", "emoticon_tear", "emoticon_titter", "emoticon_love", "emoticon_heart", "emoticons", "kaomojis", "repeated_letters", "hashtag_pairs", "repeated_punctuation")
+		colnames(newline) <- headers
+		print(paste("finished processing USER:", r, ".. POST:", n-2))
+		print(newline)
 	    output <- rbind(output, newline)
- 
+		write.csv(output, fileout, row.names = FALSE) 
 		}
 }
 
-headers <- c("user", "post", "age", "age_cat", "original", "cleaned", "post_length", "poetic_format", "popular_expressions", "classical_chrs", "emoticon_laugh", "emoticon_tear", "emoticon_titter", "emoticon_love", "emoticon_heart", "emoticon_doge", "emoticon_bye", "emoticon_giggle", "emoticon_applause",  "emoticons", "kaomojis", "repeated_letters", "hashtag_pairs", "repeated_punctuation")
-colnames(output) <- headers
-print(output)
-
-print(paste("finished processing USER:", r, ".. POST:", n-2))
-print(newline)
-response <- readLines(file("stdin"), n = 1L)
-close(file("stdin"))
-fileout <- paste0('weibo_', lower, '-', upper,'_100-posts_preprocessing1.csv')
-write.csv(output, fileout, row.names = FALSE) 
