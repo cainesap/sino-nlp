@@ -258,8 +258,13 @@ for (r in 1:nrow(weibo)) {
 		countpun <- bigramcount(post7, punctlist)
 	
 		## 7b: remove punctuation
-		punctpatt <- "[[:punct:]，。？！～．【】……]"
-		post8 <- gsub(punctpatt, "", post7)
+		## reduce sentence delimiting punctuation sequences to single delimiter
+		post7a <- gsub("([.?!。．])+", "\\1", post7)
+		## replace Chinese 。 and ．plus … with .
+		post7b <- gsub("[。．…]", ".", post7a)
+		## strip all punctuation except full stop, question mark, exclamation mark
+		punctpatt <- "[[:punct:]，～【】……]&&[^.?!]"
+		post8 <- gsub(punctpatt, "", post7b)
 		print(paste(countpun, "repeated punctuation(s) found; new text:", post8))
 		
 		## add info about this post to output data frame, and save to file as you go
