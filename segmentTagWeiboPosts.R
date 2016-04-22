@@ -6,18 +6,19 @@
 args <- commandArgs(trailingOnly = TRUE)
 lower <- args[1]
 upper <- args[2]
-## input and output filenames (specify fileout absolutely, as we will cd to Stanford POS-tagger shortly)
-filein <- paste0('weibo_', lower, '-', upper,'_post-process.csv')
-fileout <- paste0('~/Documents/weibo_', lower, '-', upper,'_segged-tagged.csv')
 
-## CORPUS DIRECTORY for output
-## in our set up we had 'tmp', 'segment', 'postag' as subdirs within 'weibo/cleaned/'
+## CHECK ##
+## input and output filenames (specify fileout absolutely, as we will cd to Stanford POS-tagger shortly)
+filein <- paste0('~/Documents/weibo_', lower, '-', upper,'_post-process.csv')
+fileout <- paste0('~/Documents/weibo_', lower, '-', upper,'_segged-tagged.csv')
+## CORPUS DIRECTORY for output (in our set up we had 'tmp', 'segment', 'postag' as subdirs within 'weibo/cleaned/')
 corpusdir <- '~/Corpora/weibo/cleaned/'
 
-## LOAD DATA 
+## load data
 weibo <- read.csv(filein, as.is = TRUE)
 weibo$age_cat <- as.factor(weibo$age_cat)
 
+## CHECK PATHS ##
 ## where are Stanford NLP tools? (download latest versions)
 segpath <- "~/nlp-tools/stanford-segmenter-2015-12-09"
 tagpath <- "~/nlp-tools/stanford-postagger-full-2015-12-09"
@@ -38,6 +39,7 @@ for (r in (1:nrow(weibo))) {  # all rows
 	original <- weibo$original[r]
 	cleaned <- weibo$cleaned[r]
 	
+	## CHECK PATHS ##
 	## filepaths for cleaned up texts
 	cleanseg <- paste0(corpusdir, 'segment/weibo_', age_cat,'_user', user, '_post', post, '_segment.txt')
 	cleantag <- paste0(corpusdir, 'postag/weibo_', age_cat,'_user', user, '_post', post, '_postag.txt')

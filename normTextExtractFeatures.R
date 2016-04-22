@@ -1,8 +1,9 @@
 ## WEIBO AGE PROFILING: Zhang et al 2016 LREC.
 ## text normalisation and feature extraction
 
-## PRELIMINARIES
+##PRELIMINARIES
 ## R package to read from Excel file
+# install.packages('gdata')  # if necessary
 library(gdata)
 
 ## run from command line with Rscript
@@ -11,6 +12,8 @@ args <- commandArgs(trailingOnly = TRUE)
 lower <- args[1]
 upper <- args[2]
 ageCat <- paste0("age", lower, ".", upper)
+
+## CHECK PATHS ##
 ## input and output filenames
 filein <- paste0('weibo_', lower, '-', upper,'_pre-process.xlsx') 
 fileout <- paste0('weibo_', lower, '-', upper,'_post-process.csv')
@@ -23,6 +26,7 @@ weibo <- read.xls(filein, as.is = TRUE)
 
 
 ## LOAD RESOURCES
+## CHECK PATHS ##
 ## classical characters
 classical <- read.csv('dictClassicalModernCharacters.csv', as.is = TRUE)
 listclassical <- classical[,1]
@@ -35,7 +39,7 @@ kaomoji <- read.csv("listKaomoji.csv", header = FALSE, as.is = TRUE, sep = "$")
 listkaomoji <- kaomoji[1,]
 
 
-## FUNCTIONS
+## FUNCTIONS
 ## count occurrences of x in a string
 strcount <- function(x, pattern, split) {
   unlist(lapply(
@@ -62,7 +66,6 @@ bigramcount <- function(x, matchlist) {
   )))
 }
 
-
 ## check before proceeding
 print(paste("Working with", filein, ".. Press any key to continue (or Ctrl+C to cancel)"))
 f <- file("stdin")
@@ -87,8 +90,8 @@ for (r in 1:nrow(weibo)) {
 		post1 <- nonempty[n]
 		print(paste("USER:", r, ".. POST:", n-2, ".. TEXT:", post1, ".. press any key to continue"))
 	
-	    ## 0: Count post length
-	    countpostlength <- nchar(post1)
+		## 0: Count post length
+	    	countpostlength <- nchar(post1)
 	    
 		## 1: check for poetic format, split on punctuation
 		poetic <- 0
@@ -106,7 +109,7 @@ for (r in 1:nrow(weibo)) {
 		}
 		print(paste("poetic format:", poetic,", section(s):", paste(sections, collapse = " | ")))
 		
-        ## 2a: check for popular expressions, count and delete
+        	## 2a: check for popular expressions, count and delete
 		countpopex <- 0
 		post2 <- ""
 		for (pop in listpopex) {
@@ -275,6 +278,5 @@ for (r in 1:nrow(weibo)) {
 		print(newline)
 	    output <- rbind(output, newline)
 		write.csv(output, fileout, row.names = FALSE) 
-		}
+	}
 }
-
